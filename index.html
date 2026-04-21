@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rocket School — Grands Comptes Alternance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #FF5C00;
+      --orange-light: #FF8A3D;
+      --orange-glow: rgba(255, 92, 0, 0.25);
+      --black: #0A0A0A;
+      --dark: #111111;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 92, 0, 0.2);
+      --white: #FFFFFF;
+      --muted: rgba(255,255,255,0.55);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── BACKGROUND EFFECTS ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse, rgba(255,92,0,0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px var(--orange-glow);
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text span {
+      color: var(--orange);
+    }
+
+    .header-badge {
+      background: rgba(255,92,0,0.12);
+      border: 1px solid rgba(255,92,0,0.3);
+      color: var(--orange-light);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding: 80px 48px 60px;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,92,0,0.1);
+      border: 1px solid rgba(255,92,0,0.25);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--orange-light);
+      margin-bottom: 28px;
+      animation: fadeInDown 0.6s ease;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.6s ease 0.1s both;
+    }
+
+    .hero h1 .accent {
+      background: linear-gradient(90deg, var(--orange), var(--orange-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+      animation: fadeInUp 0.6s ease 0.2s both;
+    }
+
+    .stats-strip {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.6s ease 0.3s both;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 2px;
+    }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 0 48px 48px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .filter-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(255,92,0,0.15);
+      border-color: var(--orange);
+      color: var(--orange-light);
+    }
+
+    /* ─── GRID ─── */
+    .grid-container {
+      padding: 0 48px 80px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+      animation: fadeInUp 0.5s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--orange), var(--orange-light));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(255,92,0,0.15);
+      border-color: rgba(255,92,0,0.4);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-emoji {
+      width: 48px; height: 48px;
+      background: rgba(255,92,0,0.1);
+      border: 1px solid rgba(255,92,0,0.2);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+
+    .card-rank {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--orange);
+      background: rgba(255,92,0,0.1);
+      border: 1px solid rgba(255,92,0,0.2);
+      border-radius: 6px;
+      padding: 3px 8px;
+    }
+
+    .card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .card-sector {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--orange-light);
+      background: rgba(255,92,0,0.08);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+    }
+
+    /* ─── CTA SECTION ─── */
+    .cta-section {
+      position: relative;
+      z-index: 5;
+      margin: 0 48px 80px;
+      background: linear-gradient(135deg, rgba(255,92,0,0.15), rgba(255,138,61,0.08));
+      border: 1px solid rgba(255,92,0,0.3);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px; height: 200px;
+      background: radial-gradient(ellipse, rgba(255,92,0,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .cta-section p {
+      color: var(--muted);
+      margin-bottom: 28px;
+      font-size: 15px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 36px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(255,92,0,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(255,92,0,0.5);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative;
+      z-index: 5;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer strong { color: var(--orange); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      header, .hero, .grid-container, .filter-bar, .cta-section, footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .cta-section { margin: 0 20px 60px; }
+      .stats-strip { gap: 24px; }
+      header { flex-direction: column; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🚀</div>
+    <div class="logo-text">Rocket<span>School</span></div>
+  </div>
+  <div class="header-badge">Alternance · Commerciaux BtoB</div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-label">🎯 Stratégie de placement 2025–2026</div>
+  <h1>20 <span class="accent">Grands Comptes</span><br/>pour vos alternants</h1>
+  <p>Les entreprises prioritaires pour placer vos étudiants en alternance en tant que Commerciaux BtoB — sélectionnées pour leur culture sales et leur appétence aux jeunes talents.</p>
+  <div class="stats-strip">
+    <div class="stat">
+      <div class="stat-number">20</div>
+      <div class="stat-label">Grands comptes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Secteurs couverts</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">★★★</div>
+      <div class="stat-label">Potentiel alternance</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FILTER BAR ─── -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCards('all', this)">Tous</button>
+  <button class="filter-btn" onclick="filterCards('tech', this)">Tech & SaaS</button>
+  <button class="filter-btn" onclick="filterCards('telecom', this)">Télécoms & IT</button>
+  <button class="filter-btn" onclick="filterCards('services', this)">Services RH</button>
+  <button class="filter-btn" onclick="filterCards('finance', this)">Finance & Assurance</button>
+  <button class="filter-btn" onclick="filterCards('distribution', this)">Distribution</button>
+</div>
+
+<!-- ─── CARDS GRID ─── -->
+<div class="grid-container">
+  <div class="grid" id="cards-grid">
+
+    <!-- TECH & SAAS -->
+    <div class="card" data-sector="tech" style="animation-delay:0.05s">
+      <div class="card-top">
+        <div class="card-emoji">💼</div>
+        <div class="card-rank">#01</div>
+      </div>
+      <h3>Salesforce</h3>
+      <span class="card-sector">Tech & SaaS</span>
+      <p>Leader mondial du CRM, culture commerciale ultra-structurée. Recrute régulièrement des SDR & BDR juniors avec des parcours de formation intégrés.</p>
+      <div class="card-tags">
+        <span class="tag">CRM</span>
+        <span class="tag">SDR / BDR</span>
+        <span class="tag">Inside Sales</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="tech" style="animation-delay:0.1s">
+      <div class="card-top">
+        <div class="card-emoji">🟠</div>
+        <div class="card-rank">#02</div>
+      </div>
+      <h3>HubSpot</h3>
+      <span class="card-sector">Tech & SaaS</span>
+      <p>Fort développement en France, ADN inbound marketing & sales. Profil commercial junior très recherché pour accompagner la croissance EMEA.</p>
+      <div class="card-tags">
+        <span class="tag">Inbound Sales</span>
+        <span class="tag">SaaS</span>
+        <span class="tag">Growth</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="tech" style="animation-delay:0.15s">
+      <div class="card-top">
+        <div class="card-emoji">🟢</div>
+        <div class="card-rank">#03</div>
+      </div>
+      <h3>Sage</h3>
+      <span class="card-sector">Tech & SaaS</span>
+      <p>Éditeur de logiciels de gestion, présence nationale. Équipes sales structurées avec des cycles de vente BtoB adaptés à la montée en compétences.</p>
+      <div class="card-tags">
+        <span class="tag">Gestion</span>
+        <span class="tag">PME</span>
+        <span class="tag">Vente terrain</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="tech" style="animation-delay:0.2s">
+      <div class="card-top">
+        <div class="card-emoji">🔵</div>
+        <div class="card-rank">#04</div>
+      </div>
+      <h3>Cegid</h3>
+      <span class="card-sector">Tech & SaaS</span>
+      <p>Solutions RH & retail, très actif sur l'alternance commerciale. Structure idéale pour former des commerciaux complets sur des cycles longs.</p>
+      <div class="card-tags">
+        <span class="tag">RH & Retail</span>
+        <span class="tag">Alternance active</span>
+        <span class="tag">B2B</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="tech" style="animation-delay:0.25s">
+      <div class="card-top">
+        <div class="card-emoji">🔴</div>
+        <div class="card-rank">#05</div>
+      </div>
+      <h3>Oracle</h3>
+      <span class="card-sector">Tech & SaaS</span>
+      <p>Grands cycles de vente enterprise. Besoins récurrents en avant-vente et inside sales — excellent terrain pour développer une approche consultative.</p>
+      <div class="card-tags">
+        <span class="tag">Enterprise</span>
+        <span class="tag">Avant-vente</span>
+        <span class="tag">Cloud</span>
+      </div>
+    </div>
+
+    <!-- TELECOM & IT -->
+    <div class="card" data-sector="telecom" style="animation-delay:0.3s">
+      <div class="card-top">
+        <div class="card-emoji">📡</div>
+        <div class="card-rank">#06</div>
+      </div>
+      <h3>Bouygues Telecom Entreprises</h3>
+      <span class="card-sector">Télécoms & IT</span>
+      <p>Division B2B avec une vraie politique alternance. Forte culture commerciale terrain, objectifs clairs et accompagnement managérial structuré.</p>
+      <div class="card-tags">
+        <span class="tag">Télécom B2B</span>
+        <span class="tag">Terrain</span>
+        <span class="tag">Politique alternance</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="telecom" style="animation-delay:0.35s">
+      <div class="card-top">
+        <div class="card-emoji">📶</div>
+        <div class="card-rank">#07</div>
+      </div>
+      <h3>SFR Business</h3>
+      <span class="card-sector">Télécoms & IT</span>
+      <p>Grosse force de vente B2B, besoins en commerciaux terrain et sédentaires. Catalogue produit large idéal pour apprendre à vendre des solutions complexes.</p>
+      <div class="card-tags">
+        <span class="tag">Inside Sales</span>
+        <span class="tag">Télécoms</span>
+        <span class="tag">Solutions B2B</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="telecom" style="animation-delay:0.4s">
+      <div class="card-top">
+        <div class="card-emoji">💻</div>
+        <div class="card-rank">#08</div>
+      </div>
+      <h3>Econocom</h3>
+      <span class="card-sector">Télécoms & IT</span>
+      <p>Services IT & digital pour les entreprises. Recruteurs réguliers d'alternants commerciaux avec un fort accent sur la transformation numérique.</p>
+      <div class="card-tags">
+        <span class="tag">IT Services</span>
+        <span class="tag">Digital</span>
+        <span class="tag">B2B</span>
+      </div>
+    </div>
+
+    <!-- SERVICES RH -->
+    <div class="card" data-sector="services" style="animation-delay:0.45s">
+      <div class="card-top">
+        <div class="card-emoji">🤝</div>
+        <div class="card-rank">#09</div>
+      </div>
+      <h3>ManpowerGroup</h3>
+      <span class="card-sector">Services RH</span>
+      <p>Vente de solutions RH en B2B — le terrain idéal pour former des commerciaux complets. Cycle court, relationnel intense et objectifs hebdomadaires.</p>
+      <div class="card-tags">
+        <span class="tag">RH</span>
+        <span class="tag">Vente solutions</span>
+        <span class="tag">National</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="services" style="animation-delay:0.5s">
+      <div class="card-top">
+        <div class="card-emoji">🏢</div>
+        <div class="card-rank">#10</div>
+      </div>
+      <h3>Adecco</h3>
+      <span class="card-sector">Services RH</span>
+      <p>Très structuré sur l'alternance, culture commerciale forte. Nombreux postes en agence ou sédentaires, excellent pour développer l'endurance commerciale.</p>
+      <div class="card-tags">
+        <span class="tag">Intérim</span>
+        <span class="tag">RH</span>
+        <span class="tag">Réseau national</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="services" style="animation-delay:0.55s">
+      <div class="card-top">
+        <div class="card-emoji">🔶</div>
+        <div class="card-rank">#11</div>
+      </div>
+      <h3>Randstad</h3>
+      <span class="card-sector">Services RH</span>
+      <p>Culture commerciale très marquée, déploiement national. Chaque commercial est responsable de son portefeuille clients dès les premiers mois.</p>
+      <div class="card-tags">
+        <span class="tag">RH</span>
+        <span class="tag">Terrain</span>
+        <span class="tag">Portefeuille clients</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="services" style="animation-delay:0.6s">
+      <div class="card-top">
+        <div class="card-emoji">🍽️</div>
+        <div class="card-rank">#12</div>
+      </div>
+      <h3>Sodexo</h3>
+      <span class="card-sector">Services RH</span>
+      <p>Services aux entreprises (restauration, avantages salariés). Profils commerciaux B2B recherchés avec de vraies responsabilités dès l'alternance.</p>
+      <div class="card-tags">
+        <span class="tag">Services</span>
+        <span class="tag">B2B</span>
+        <span class="tag">Grand compte</span>
+      </div>
+    </div>
+
+    <!-- FINANCE & ASSURANCE -->
+    <div class="card" data-sector="finance" style="animation-delay:0.65s">
+      <div class="card-top">
+        <div class="card-emoji">🛡️</div>
+        <div class="card-rank">#13</div>
+      </div>
+      <h3>AXA</h3>
+      <span class="card-sector">Finance & Assurance</span>
+      <p>Développement commercial en assurance, programmes alternance bien rodés. Marque forte, produits complexes — idéal pour apprendre la vente consultative.</p>
+      <div class="card-tags">
+        <span class="tag">Assurance</span>
+        <span class="tag">Vente conseil</span>
+        <span class="tag">Programme structuré</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="finance" style="animation-delay:0.7s">
+      <div class="card-top">
+        <div class="card-emoji">💙</div>
+        <div class="card-rank">#14</div>
+      </div>
+      <h3>Malakoff Humanis</h3>
+      <span class="card-sector">Finance & Assurance</span>
+      <p>Protection sociale B2B, recrutement commercial actif. Fort besoin de profils capables de vendre des solutions santé/prévoyance à des TPE/PME.</p>
+      <div class="card-tags">
+        <span class="tag">Protection sociale</span>
+        <span class="tag">TPE/PME</span>
+        <span class="tag">B2B</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="finance" style="animation-delay:0.75s">
+      <div class="card-top">
+        <div class="card-emoji">🏦</div>
+        <div class="card-rank">#15</div>
+      </div>
+      <h3>BNP Paribas</h3>
+      <span class="card-sector">Finance & Assurance</span>
+      <p>Banque entreprises avec de nombreux postes commerciaux. Les alternants développent un portefeuille de PME et apprennent la vente de solutions financières.</p>
+      <div class="card-tags">
+        <span class="tag">Banque B2B</span>
+        <span class="tag">PME</span>
+        <span class="tag">Portefeuille</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="finance" style="animation-delay:0.8s">
+      <div class="card-top">
+        <div class="card-emoji">🔴</div>
+        <div class="card-rank">#16</div>
+      </div>
+      <h3>Société Générale</h3>
+      <span class="card-sector">Finance & Assurance</span>
+      <p>Programmes dédiés aux écoles de commerce et vente. Nombreux postes en banque des entreprises avec forte dimension relation client et prospection.</p>
+      <div class="card-tags">
+        <span class="tag">Banque</span>
+        <span class="tag">Relation client</span>
+        <span class="tag">Alternance active</span>
+      </div>
+    </div>
+
+    <!-- DISTRIBUTION -->
+    <div class="card" data-sector="distribution" style="animation-delay:0.85s">
+      <div class="card-top">
+        <div class="card-emoji">🍕</div>
+        <div class="card-rank">#17</div>
+      </div>
+      <h3>Sysco France</h3>
+      <span class="card-sector">Distribution</span>
+      <p>Distribution alimentaire B2B, force de vente terrain importante. Cycle de vente court, objectifs hebdomadaires — formation rapide aux réflexes commerciaux.</p>
+      <div class="card-tags">
+        <span class="tag">Distribution</span>
+        <span class="tag">Terrain</span>
+        <span class="tag">Alimentaire B2B</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="distribution" style="animation-delay:0.9s">
+      <div class="card-top">
+        <div class="card-emoji">📦</div>
+        <div class="card-rank">#18</div>
+      </div>
+      <h3>Lyreco</h3>
+      <span class="card-sector">Distribution</span>
+      <p>Référence de la vente B2B en France. École interne de la vente, culture commerciale très marquée — parfait pour des alternants qui veulent progresser vite.</p>
+      <div class="card-tags">
+        <span class="tag">École de la vente</span>
+        <span class="tag">Fournitures B2B</span>
+        <span class="tag">★ Recommandé</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="distribution" style="animation-delay:0.95s">
+      <div class="card-top">
+        <div class="card-emoji">💧</div>
+        <div class="card-rank">#19</div>
+      </div>
+      <h3>Veolia</h3>
+      <span class="card-sector">Distribution</span>
+      <p>Services environnementaux, forte demande en commerciaux B2B. Contexte de la transition écologique très porteur pour convaincre collectivités et industries.</p>
+      <div class="card-tags">
+        <span class="tag">Environnement</span>
+        <span class="tag">B2B / B2G</span>
+        <span class="tag">Transition éco</span>
+      </div>
+    </div>
+
+    <div class="card" data-sector="distribution" style="animation-delay:1s">
+      <div class="card-top">
+        <div class="card-emoji">⚡</div>
+        <div class="card-rank">#20</div>
+      </div>
+      <h3>Engie</h3>
+      <span class="card-sector">Distribution</span>
+      <p>Transition énergétique en plein essor, forte demande en commerciaux B2B. Offres complexes et cycles de vente longs — excellent pour former des profils experts.</p>
+      <div class="card-tags">
+        <span class="tag">Énergie</span>
+        <span class="tag">B2B</span>
+        <span class="tag">Vente complexe</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section">
+  <h2>🚀 Prêt à placer vos alternants ?</h2>
+  <p>Ces 20 comptes représentent votre pipeline prioritaire. Personnalisez votre approche par secteur pour maximiser le taux de placement.</p>
+  <button class="cta-btn">Lancer la prospection →</button>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <span>© 2025–2026 <strong>Rocket School</strong> — Stratégie Alternance</span>
+  <span>20 grands comptes · 6 secteurs · BtoB Sales</span>
+</footer>
+
+<script>
+  function filterCards(sector, btn) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Filter cards
+    document.querySelectorAll('.card').forEach(card => {
+      if (sector === 'all' || card.dataset.sector === sector) {
+        card.style.display = 'block';
+        card.style.animationName = 'none';
+        requestAnimationFrame(() => {
+          card.style.animationName = 'fadeInUp';
+        });
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
