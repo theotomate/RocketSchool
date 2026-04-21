@@ -1,0 +1,241 @@
+
+<h2 class="sr-only">10 exercices d'automatisation HubSpot pour étudiants, classés par niveau de difficulté</h2>
+
+<style>
+  .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; padding: 1rem 0; }
+  .hub-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+  .hub-card:hover { border-color: var(--color-border-secondary); }
+  .hub-card.open { border-color: var(--color-border-primary); }
+  .card-header { display: flex; align-items: flex-start; gap: 12px; }
+  .card-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+  .card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; margin: 0; }
+  .card-meta { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); font-weight: 500; }
+  .badge-obj { background: #E6F1FB; color: #0C447C; }
+  .badge-tri { background: #EAF3DE; color: #3B6D11; }
+  .badge-int { background: #FAEEDA; color: #854F0B; }
+  .badge-avd { background: #FAECE7; color: #993C1D; }
+  .card-body { margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--color-border-tertiary); display: none; }
+  .card-body.open { display: block; }
+  .card-body p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin: 0 0 10px; }
+  .card-body ul { margin: 0 0 10px; padding-left: 18px; }
+  .card-body li { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; }
+  .label-section { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 4px; }
+  .obj-trigger { display: inline-block; margin-top: 8px; font-size: 12px; padding: 4px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); color: var(--color-text-secondary); cursor: pointer; }
+  .obj-trigger:hover { background: var(--color-background-secondary); }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding-top: 0.5rem; }
+  .filter-btn { font-size: 12px; padding: 4px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: 20px; background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
+  .filter-btn.active, .filter-btn:hover { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); }
+</style>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all', this)">Tous</button>
+  <button class="filter-btn" onclick="filterCards('debutant', this)">Débutant</button>
+  <button class="filter-btn" onclick="filterCards('intermediaire', this)">Intermédiaire</button>
+  <button class="filter-btn" onclick="filterCards('avance', this)">Avancé</button>
+</div>
+
+<div class="hub-grid" id="grid"></div>
+
+<script>
+const workflows = [
+  {
+    num: 1, level: "debutant",
+    title: "Bienvenue automatique après soumission de formulaire",
+    objectif: "Envoyer un email de bienvenue personnalisé 5 minutes après qu'un contact remplit le formulaire de contact du site.",
+    declencheur: "Soumission de formulaire",
+    actions: [
+      "Délai de 5 minutes",
+      "Envoyer un email de bienvenue (utiliser les tokens de personnalisation : {{contact.firstname}})",
+      "Créer une tâche de suivi pour l'équipe commerciale"
+    ],
+    conseil: "Commencer par ce workflow pour se familiariser avec les délais et les tokens HubSpot.",
+    labelBadge: "badge-tri", badgeText: "Débutant"
+  },
+  {
+    num: 2, level: "debutant",
+    title: "Attribuer un contact à un commercial selon le pays",
+    objectif: "Assigner automatiquement un owner différent selon la propriété 'Pays' du contact (France → Marie, Belgique → Paul, autre → Pool commun).",
+    declencheur: "Contact créé ou mis à jour",
+    actions: [
+      "Branche IF/THEN : Pays = France → Assigner à Marie",
+      "Branche IF/THEN : Pays = Belgique → Assigner à Paul",
+      "Branche par défaut → Assigner au pool"
+    ],
+    conseil: "Exercice idéal pour comprendre la logique de branchement conditionnel.",
+    labelBadge: "badge-tri", badgeText: "Débutant"
+  },
+  {
+    num: 3, level: "debutant",
+    title: "Notification interne lors d'un lead chaud",
+    objectif: "Envoyer un email interne à l'équipe commerciale quand un contact atteint un score de lead ≥ 50.",
+    declencheur: "Score de contact mis à jour (≥ 50)",
+    actions: [
+      "Envoyer une notification interne à l'owner du contact",
+      "Ajouter la liste statique 'Leads chauds'",
+      "Mettre à jour la propriété 'Étape du cycle de vie' → MQL"
+    ],
+    conseil: "Introduit la notion de lead scoring et de listes segmentées.",
+    labelBadge: "badge-tri", badgeText: "Débutant"
+  },
+  {
+    num: 4, level: "intermediaire",
+    title: "Séquence de nurturing sur 3 emails (7 jours)",
+    objectif: "Envoyer une série de 3 emails éducatifs espacés dans le temps après le téléchargement d'un ebook.",
+    declencheur: "Contact a téléchargé l'ebook (propriété = Oui)",
+    actions: [
+      "Email J+0 : Confirmation + lien de téléchargement",
+      "Délai 3 jours → Email J+3 : Contenu complémentaire",
+      "Délai 4 jours → Email J+7 : CTA vers une démo",
+      "SI clic sur démo → Sortir du workflow + créer une tâche commerciale"
+    ],
+    conseil: "Travail sur les sorties conditionnelles : sortir du workflow si l'objectif est atteint.",
+    labelBadge: "badge-int", badgeText: "Intermédiaire"
+  },
+  {
+    num: 5, level: "intermediaire",
+    title: "Réengagement des contacts inactifs (6 mois)",
+    objectif: "Identifier les contacts qui n'ont ouvert aucun email depuis 180 jours et lancer une campagne de réengagement.",
+    declencheur: "Dernière activité email > 180 jours",
+    actions: [
+      "Envoyer email de réengagement 'Vous nous manquez'",
+      "Délai 7 jours — SI ouverture → Remettre dans le cycle actif",
+      "Si pas d'ouverture → Mettre à jour statut = 'À désabonner'",
+      "Envoyer notification au responsable marketing"
+    ],
+    conseil: "Introduit la gestion de la délivrabilité et du cycle de vie des contacts.",
+    labelBadge: "badge-int", badgeText: "Intermédiaire"
+  },
+  {
+    num: 6, level: "intermediaire",
+    title: "Workflow de qualification d'un deal entrant",
+    objectif: "Quand un deal est créé avec un montant > 10 000 €, déclencher une série d'actions de qualification.",
+    declencheur: "Deal créé — Montant > 10 000 €",
+    actions: [
+      "Envoyer email interne au directeur commercial",
+      "Créer une tâche 'Appel de qualification' dans les 24h",
+      "Déplacer le deal en étape 'Qualification'",
+      "Ajouter un tag 'Deal prioritaire'"
+    ],
+    conseil: "Premier contact avec les workflows orientés Deals (et non Contacts).",
+    labelBadge: "badge-int", badgeText: "Intermédiaire"
+  },
+  {
+    num: 7, level: "intermediaire",
+    title: "Mise à jour automatique du cycle de vie",
+    objectif: "Faire progresser automatiquement l'étape du cycle de vie selon les actions du contact (Lead → MQL → SQL).",
+    declencheur: "Mise à jour de propriété ou engagement",
+    actions: [
+      "SI score ≥ 30 → Étape = MQL",
+      "SI réunion planifiée → Étape = SQL",
+      "SI deal créé → Étape = Opportunité",
+      "Envoyer notification à l'owner à chaque transition"
+    ],
+    conseil: "Exercice clé pour comprendre le modèle de cycle de vie HubSpot.",
+    labelBadge: "badge-int", badgeText: "Intermédiaire"
+  },
+  {
+    num: 8, level: "avance",
+    title: "Onboarding client post-signature (multi-équipes)",
+    objectif: "Déclencher un onboarding structuré dès qu'un deal passe en 'Gagné', avec des tâches pour 3 équipes différentes.",
+    declencheur: "Deal mis à jour → Étape = Gagné",
+    actions: [
+      "Créer contact associé dans liste 'Clients actifs'",
+      "Tâche équipe technique : provisionner l'accès (J+1)",
+      "Tâche équipe CSM : appel de bienvenue (J+2)",
+      "Email automatique au client : kit de démarrage (J+0)",
+      "Délai 14 jours → Email de satisfaction (NPS)"
+    ],
+    conseil: "Workflow multi-objets (Deal + Contact) avec coordination inter-équipes.",
+    labelBadge: "badge-avd", badgeText: "Avancé"
+  },
+  {
+    num: 9, level: "avance",
+    title: "Routing intelligent des leads par secteur et taille",
+    objectif: "Assigner les leads entrants au bon commercial selon la combinaison : secteur d'activité + taille d'entreprise.",
+    declencheur: "Contact créé via formulaire ou import",
+    actions: [
+      "Branche 1 : Secteur Tech + > 200 employés → Commercial Grands Comptes",
+      "Branche 2 : Secteur Retail + < 50 employés → Commercial PME",
+      "Branche 3 : Données manquantes → Envoyer email de qualification automatique",
+      "Créer une tâche de prise de contact dans tous les cas",
+      "Envoyer rapport hebdomadaire des assignations"
+    ],
+    conseil: "Logique de branchement à plusieurs niveaux + gestion des données incomplètes.",
+    labelBadge: "badge-avd", badgeText: "Avancé"
+  },
+  {
+    num: 10, level: "avance",
+    title: "Alerte churn et plan de rétention client",
+    objectif: "Détecter les signaux d'un risque de churn (absence de login, NPS < 6, tickets ouverts) et lancer un plan d'action.",
+    declencheur: "Propriété personnalisée 'Score de santé client' < 40",
+    actions: [
+      "Envoyer alerte au CSM assigné",
+      "Créer tâche urgente 'Appel de rétention' sous 48h",
+      "SI NPS < 6 → Escalader au directeur de compte",
+      "Envoyer email personnalisé au client (offre de support prioritaire)",
+      "Mettre à jour propriété 'Risque churn' = Élevé",
+      "Ajouter à la liste de suivi mensuelle direction"
+    ],
+    conseil: "Workflow avancé combinant propriétés personnalisées, escalade et multi-actions.",
+    labelBadge: "badge-avd", badgeText: "Avancé"
+  }
+];
+
+const levelColors = {
+  debutant: { bg: '#EAF3DE', color: '#3B6D11', circle: '#EAF3DE', ccolor: '#3B6D11' },
+  intermediaire: { bg: '#FAEEDA', color: '#854F0B', circle: '#FAEEDA', ccolor: '#854F0B' },
+  avance: { bg: '#FAECE7', color: '#993C1D', circle: '#FAECE7', ccolor: '#993C1D' }
+};
+
+function renderCards(filter) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const filtered = filter === 'all' ? workflows : workflows.filter(w => w.level === filter);
+  
+  filtered.forEach(w => {
+    const lc = levelColors[w.level];
+    const card = document.createElement('div');
+    card.className = 'hub-card';
+    card.dataset.level = w.level;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-num" style="background:${lc.circle};color:${lc.ccolor}">${w.num}</div>
+        <div style="flex:1">
+          <p class="card-title">${w.title}</p>
+          <div class="card-meta">
+            <span class="badge" style="background:${lc.bg};color:${lc.color}">${lc === levelColors.debutant ? 'Débutant' : lc === levelColors.intermediaire ? 'Intermédiaire' : 'Avancé'}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="label-section">Objectif</p>
+        <p>${w.objectif}</p>
+        <p class="label-section">Déclencheur</p>
+        <p>${w.declencheur}</p>
+        <p class="label-section">Actions à configurer</p>
+        <ul>${w.actions.map(a => `<li>${a}</li>`).join('')}</ul>
+        <p class="label-section">Conseil pédagogique</p>
+        <p style="font-style:italic">${w.conseil}</p>
+        <span class="obj-trigger" onclick="event.stopPropagation();sendPrompt('Donne-moi des détails pour configurer le workflow HubSpot n°${w.num} : ${w.title}')">Détails de configuration ↗</span>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      const body = card.querySelector('.card-body');
+      const isOpen = body.classList.contains('open');
+      document.querySelectorAll('.card-body.open').forEach(b => b.classList.remove('open'));
+      document.querySelectorAll('.hub-card.open').forEach(c => c.classList.remove('open'));
+      if (!isOpen) { body.classList.add('open'); card.classList.add('open'); }
+    });
+    grid.appendChild(card);
+  });
+}
+
+function filterCards(level, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(level);
+}
+
+renderCards('all');
+</script>
